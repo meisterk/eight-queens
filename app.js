@@ -1,5 +1,5 @@
 const SYMBOL_QUEEN = '\u2655'; // ♕
-SYMBOL_EMPTY = '\u00A0';
+const SYMBOL_EMPTY = '\u00A0';
 const App = {
     data(){
         return {
@@ -44,7 +44,7 @@ const App = {
             console.log(zeile);
             this.stack.push(zeile);
             if(zeile<8){
-                this.loesegame(zeile+1)
+                this.const loesegame(zeile+1)
             }
         }
     },
