@@ -11,8 +11,8 @@
     <h1>Eight Queens</h1>
     <div id="app">
         <table>
-            <tr v-for="zeile in zeilen">
-                <td v-for="spalte in spalten" :class="klasse(zeile,spalte)">{{ text(zeile,spalte) }}</td>
+            <tr v-for="row in rows">
+                <td v-for="column in columns" :class="displayClass(row,column)">{{ displayText(row,column) }}</td>
             </tr>
         </table>
     </div>
