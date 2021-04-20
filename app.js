@@ -4,7 +4,7 @@ const App = {
     data(){
         return {
             boardsize: 8,            
-            stack: []
+            stack: []            
         }
     },
     
@@ -22,6 +22,18 @@ const App = {
                 result.push(i);
             }
             return result;
+        },
+        isOK(){
+            const columnOfActualQueen = this.stack[this.stack.length -1];
+            // is there a queen above ↑
+            
+            // is there a queen left ←
+
+            // is there a queen left above ↖ 
+            
+            // is there a queen right above 🡽
+
+            return columnOfActualQueen;
         }
 
     },
@@ -42,7 +54,7 @@ const App = {
         },
         findSolutionFromRow(row){
             this.stack.push(row);
-            if(row<8){
+            if(row<this.boardsize-3){
                 this.findSolutionFromRow(row+1)
             }
         }

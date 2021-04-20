@@ -15,6 +15,7 @@
                 <td v-for="column in columns" :class="displayClass(row,column)">{{ displayText(row,column) }}</td>
             </tr>
         </table>
+        <p>{{ isOK }}</p>
     </div>
     <script src="https://unpkg.com/vue@next"></script>
     <script src="app.js"></script>
