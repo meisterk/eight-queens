@@ -4,7 +4,7 @@ const App = {
     data(){
         return {
             boardsize: 8,            
-            stack: []            
+            columnsOfQueens: []            
         }
     },
     
@@ -24,18 +24,30 @@ const App = {
             return result;
         },
         isOK(){
-            const columnOfActualQueen = this.stack[this.stack.length -1];
-            // is there a queen above ↑
+            const rowOfLastQueen = this.columnsOfQueens.length - 1;
+            const columnOfLastQueen = this.columnsOfQueens[rowOfLastQueen];
             
-            // is there a queen left ←
+            let result = true;
+            for(let actualRow = 0; actualRow < rowOfLastQueen ; actualRow++){
+                const actualColumn = this.columnsOfQueens[actualRow];
+                
+                // is there a queen above ↑
+                if(actualColumn === columnOfLastQueen){
+                    result = false;
+                }               
+                
+                // is there a queen left above ↖ 
+                if((actualColumn - actualRow) === (columnOfLastQueen - rowOfLastQueen)){
+                    result = false;
+                }
 
-            // is there a queen left above ↖ 
-            
-            // is there a queen right above 🡽
-
-            return columnOfActualQueen;
+                // is there a queen right above 🡽 
+                if((actualColumn + actualRow) === (columnOfLastQueen + rowOfLastQueen)){
+                    result = false;
+                }  
+            }
+            return result;
         }
-
     },
 
     methods: {
@@ -47,16 +59,13 @@ const App = {
             }
         },
         displayText(row, column){
-            if(this.stack[row]===column)
+            if(this.columnsOfQueens[row]===column)
                 return SYMBOL_QUEEN;
             else
                 return SYMBOL_EMPTY;
         },
         findSolutionFromRow(row){
-            this.stack.push(row);
-            if(row<this.boardsize-3){
-                this.findSolutionFromRow(row+1)
-            }
+            
         }
     },
     mounted(){
