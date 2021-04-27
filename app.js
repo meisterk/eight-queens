@@ -3,7 +3,7 @@ const SYMBOL_EMPTY = '\u00A0';
 const App = {
     data(){
         return {
-            boardsize: 8,            
+            boardsize: 4,            
             columnsOfQueens: []            
         }
     },
@@ -22,6 +22,12 @@ const App = {
                 result.push(i);
             }
             return result;
+        },
+        rowOfLastQueen(){
+            return this.columnsOfQueens.length - 1;
+        },
+        columnOfLastQueen(){
+            return this.columnsOfQueens[this.rowOfLastQueen];
         },
         isOK(){
             const rowOfLastQueen = this.columnsOfQueens.length - 1;
@@ -64,12 +70,39 @@ const App = {
             else
                 return SYMBOL_EMPTY;
         },
-        findSolutionFromRow(row){
-            
+        findSolutionFromRow(){
+            console.log(this.columnsOfQueens);
+            if(this.isOK){
+                if(this.columnsOfQueens.length === this.boardsize){
+                    console.log("WINNER");
+                }else{
+                    // next row
+                    this.columnsOfQueens.push(0);
+                    this.findSolutionFromRow();
+                }
+            }else{
+                if(this.rowOfLastQueen < this.boardsize - 1){
+                    // one position to the right
+                    this.columnsOfQueens[this.rowOfLastQueen]++;
+                    this.findSolutionFromRow();
+                }else{ // EERRRRRRRRRRRRRRRRRRRRROOOOOOOOOOORRRRRRRRRRRRR
+                    // delete last queen
+                    this.columnsOfQueens.pop();
+                    if(this.rowOfLastQueen < this.boardsize - 1){
+                        // one position to the right
+                        this.columnsOfQueens[this.rowOfLastQueen]++;
+                        this.findSolutionFromRow();
+                    }else
+                    {
+                        this.columnsOfQueens.pop();
+                        this.findSolutionFromRow();
+                    }                                    
+                }
+            }
         }
     },
     mounted(){
-        this.findSolutionFromRow(0);
+        this.findSolutionFromRow();
     }
 };
 Vue.createApp(App).mount('#app');
