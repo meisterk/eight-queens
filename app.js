@@ -3,8 +3,9 @@ const SYMBOL_EMPTY = '\u00A0';
 const App = {
     data(){
         return {
-            boardsize: 4,            
-            columnsOfQueens: []            
+            boardsize: 8,            
+            columnsOfQueens: [],
+            noSolution: false           
         }
     },
     
@@ -22,20 +23,32 @@ const App = {
                 result.push(i);
             }
             return result;
+        }             
+    },
+
+    methods: {
+        displayClass(row, column){
+            if((row + column) % 2 === 0){
+                return 'white';
+            }else{
+                return 'black';
+            }
         },
-        rowOfLastQueen(){
-            return this.columnsOfQueens.length - 1;
-        },
-        columnOfLastQueen(){
-            return this.columnsOfQueens[this.rowOfLastQueen];
-        },
-        isOK(){
-            const rowOfLastQueen = this.columnsOfQueens.length - 1;
-            const columnOfLastQueen = this.columnsOfQueens[rowOfLastQueen];
+
+        displayText(row, column){
+            if(this.columnsOfQueens[row]===column)
+                return SYMBOL_QUEEN;
+            else
+                return SYMBOL_EMPTY;
+        },        
+        
+        isCorrect(chessPosition){
+            const rowOfLastQueen = chessPosition.length - 1;
+            const columnOfLastQueen = chessPosition[rowOfLastQueen];
             
             let result = true;
             for(let actualRow = 0; actualRow < rowOfLastQueen ; actualRow++){
-                const actualColumn = this.columnsOfQueens[actualRow];
+                const actualColumn = chessPosition[actualRow];
                 
                 // is there a queen above ↑
                 if(actualColumn === columnOfLastQueen){
@@ -53,56 +66,40 @@ const App = {
                 }  
             }
             return result;
+        },
+
+        getSolutions(boardsize){
+            // DFS
+            const solutions = []
+            const stack = [];
+            const firstElement = [];            
+            stack.push(firstElement);            
+            while(stack.length > 0){
+                x = stack.pop();                
+                if(x.length < boardsize){ 
+                    for(let i = 0; i < boardsize; i++){
+                        const child = [... x]; // clone x
+                        child.push(i);                        
+                        if(this.isCorrect(child)){                            
+                            stack.push(child);
+                            if(child.length === boardsize){
+                                solutions.push(child);
+                            }
+                        }                        
+                    }
+                }                             
+            }
+            return solutions;
         }
     },
 
-    methods: {
-        displayClass(row, column){
-            if((row + column) % 2 === 0){
-                return 'white';
-            }else{
-                return 'black';
-            }
-        },
-        displayText(row, column){
-            if(this.columnsOfQueens[row]===column)
-                return SYMBOL_QUEEN;
-            else
-                return SYMBOL_EMPTY;
-        },
-        findSolutionFromRow(){
-            console.log(this.columnsOfQueens);
-            if(this.isOK){
-                if(this.columnsOfQueens.length === this.boardsize){
-                    console.log("WINNER");
-                }else{
-                    // next row
-                    this.columnsOfQueens.push(0);
-                    this.findSolutionFromRow();
-                }
-            }else{
-                if(this.rowOfLastQueen < this.boardsize - 1){
-                    // one position to the right
-                    this.columnsOfQueens[this.rowOfLastQueen]++;
-                    this.findSolutionFromRow();
-                }else{ // EERRRRRRRRRRRRRRRRRRRRROOOOOOOOOOORRRRRRRRRRRRR
-                    // delete last queen
-                    this.columnsOfQueens.pop();
-                    if(this.rowOfLastQueen < this.boardsize - 1){
-                        // one position to the right
-                        this.columnsOfQueens[this.rowOfLastQueen]++;
-                        this.findSolutionFromRow();
-                    }else
-                    {
-                        this.columnsOfQueens.pop();
-                        this.findSolutionFromRow();
-                    }                                    
-                }
-            }
-        }
-    },
     mounted(){
-        this.findSolutionFromRow();
+        const solutions = this.getSolutions(this.boardsize);
+        if(solutions.length > 0){
+            this.columnsOfQueens = solutions[0];
+        }else{
+            this.noSolution = true;
+        }
     }
 };
 Vue.createApp(App).mount('#app');
