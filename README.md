@@ -1,0 +1,2 @@
+# eight-queens
+This App calculates solutions for the [Eight queens puzzle](https://en.wikipedia.org/wiki/Eight_queens_puzzle) with a backtracking algorithm and displays the first solution found. The backtracking is realized with a deep first search with a stack.
